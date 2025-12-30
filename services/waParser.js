@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import chatFilters from '../config/chatFilters.js';
+import { applyChatFilters } from './chatFilterEngine.js';
 import { formatDate } from './dateFormatter.js';
 
 const yourself = (process.env.YOUR_USERNAME_CHAT || 'You').trim();
@@ -41,7 +42,9 @@ export function parseChat(text, mediaIndex) {
             const rawText = cleanText.trim();
             const isViewOnce = rawText === '' && media !== null;
 
-            const filterClass = getFilterClass(cleanText);
+            const effects = applyChatFilters({
+                text: cleanText
+            });
 
             messages.push({
                 rawDate: raw_date,
@@ -51,25 +54,12 @@ export function parseChat(text, mediaIndex) {
                 text: cleanText,
                 isYourself,
                 media,
-                filterClass,
                 isViewOnce,
+                effects,
             });
         } else if (messages.length) {
             messages.at(-1).text += '\n' + line;
         }
     }
     return messages;
-}
-
-function getFilterClass(text) {
-    const lower = text.toLowerCase();
-
-    for (const rule of chatFilters) {
-        for (const kw of rule.keywords) {
-            if (lower.includes(kw.toLowerCase())) {
-                return rule.class;
-            }
-        }
-    }
-    return null;
 }
