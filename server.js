@@ -25,10 +25,9 @@ app.post('/upload', upload.single('zip'), async (req, res) => {
     const extractPath = `uploads/extracted/${extractId}`;
 
     new AdmZip(req.file.path).extractAllTo(extractPath, true);
-
-    // 👉 redirect ke halaman chat
     res.redirect(`/chat/${extractId}`);
 });
+
 
 app.get('/chat/:id', async (req, res) => {
     const extractId = req.params.id;
