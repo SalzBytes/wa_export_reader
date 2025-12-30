@@ -9,6 +9,7 @@
   </style>
 
   <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
 <body class="bg-[#efeae2]">
@@ -24,64 +25,22 @@
     <div id="floatingDate" class=" fixed top-3 left-1/2 -translate-x-1/2 z-50 px-3 py-1 rounded-lg bg-white/80 backdrop-blur text-xs text-gray-600 shadow pointer-events-none hidden ">
     </div>
 
-    <% if (hasMore) { %>
-    <div class="text-center my-3">
-      <a href="/chat/<%= extractId %>?page=<%= page + 1 %>&filter=<%= filter %>" class="text-xs text-blue-500 hover:underline">
-        Load older messages
-      </a>
+
+    <button id="loadOlder" data-page="1" class="text-xs text-blue-500 mb-3">
+      Load older messages
+    </button>
+
+    <div id="chatContainer" class="flex flex-col gap-2 overflow-y-auto h-screen px-3">
+     <%- include('partials/message-list', { messages }) %>
     </div>
-    <% } %>
-
-    <% let lastDate=null; messages.forEach(m=> { %> <% if (m.date !==lastDate) { lastDate=m.date; %>
-    <div class="date-separator text-center text-xs text-gray-500 my-4" data-date="<%= m.date %>">
-      <%= m.date %>
-    </div>
-    <% } %>
-
-    <div class="chat-item flex w-full mb-2">
-
-      <!-- bubble -->
-      <div class=" inline-flex flex-col max-w-[75%] px-3 py-2 rounded-lg shadow <%= m.isYourself ? 'ml-auto' : '' %>   <%= m.effects.bubbleClass || (m.isYourself ? 'bg-[#d9fdd3]' : 'bg-white') %> ">
-
-        <% if (m.effects.badge) { %>
-        <div class="text-[10px] mb-1 inline-block px-2 py-[1px] rounded <%= m.effects.badge.class %>">
-          <%= m.effects.badge.label %>
-        </div>
-        <% } %>
-
-        <!-- username (only other users) -->
-
-        <div class="text-xs font-semibold  <%= m.isYourself ? 'text-green-700' : 'text-blue-700' %> mb-1">
-          <%= m.user %>
-        </div>
-
-        <!-- message text -->
-        <% if (m.isViewOnce) { %>
-        <div class="text-sm italic text-gray-500">
-          📷 Foto sekali lihat
-        </div>
-        <% } else if (m.text) { %>
-        <pre class=" font-sans text-sm whitespace-pre-wrap break-words text-left m-0 "><%= m.text %></pre>
-        <% } %>
-
-        <!-- media -->
-        <% if (m.media) { %>
-        <img src="<%= mediaBase %>/<%= m.media.name %>" class="mt-2 rounded max-w-full">
-        <% } %>
-
-        <!-- time -->
-        <div class="self-end text-[11px] opacity-60 mt-1">
-          <%= m.time %>
-        </div>
-
-      </div>
-    </div>
-
-
-    <% }) %>
   </div>
 
   <script src="/app.js"></script>
+  <script>
+    const CHAT_ID = "<%= extractId %>";
+    const FILTER = "<%= filter %>";
+  </script>
+  <script src="/chat.js"></script>
 </body>
 
 </html>

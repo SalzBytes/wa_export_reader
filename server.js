@@ -70,6 +70,34 @@ app.get('/chat/:id', async (req, res) => {
     });
 });
 
+app.get('/chat/:id/load', (req, res) => {
+    const extractId = req.params.id;
+    const page = Number(req.query.page || 1);
+    const filter = req.query.filter || 'all';
+
+    const messages = getChatCache(extractId);
+    if (!messages) return res.send('');
+
+    let filtered = messages;
+    if (filter === 'matched') {
+        filtered = messages.filter(m => m.effects?.hasMatchedFilter);
+    }
+
+    const PAGE_SIZE = 200;
+    const total = filtered.length;
+    const start = Math.max(total - page * PAGE_SIZE, 0);
+    const end = total - (page - 1) * PAGE_SIZE;
+
+    const pageMessages = filtered.slice(start, end);
+
+    // 🔥 render partial di server
+    res.render('partials/message-list', {
+        messages: pageMessages
+    });
+});
+
+
+
 
 app.listen(3000, () =>
     console.log('🔥 http://localhost:3000')
