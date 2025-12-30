@@ -1,33 +1,45 @@
 const searchBtn = document.getElementById('searchBtn');
 const searchInput = document.getElementById('searchInput');
-const floatingDate = document.getElementById('floatingDate');
-const dateSeparators = document.querySelectorAll('.date-separator');
+const currentShowingDate = document.getElementById('currentShowingDate');
+const chatContainer = document.getElementById('chatContainer');
 
-searchBtn.addEventListener('click', () => {
-    const q = searchInput.value.toLowerCase();
+if (!chatContainer) {
+    console.warn('chatContainer not found');
+}
 
-    document.querySelectorAll('.chat-item').forEach(el => {
-        el.style.display =
-            el.innerText.toLowerCase().includes(q)
+/* ======================
+   SEARCH FILTER
+====================== */
+if (searchBtn && searchInput) {
+    searchBtn.addEventListener('click', () => {
+        const q = searchInput.value.toLowerCase();
+
+        chatContainer.querySelectorAll('.chat-item').forEach(el => {
+            el.style.display = el.innerText.toLowerCase().includes(q)
                 ? ''
                 : 'none';
+        });
     });
-});
+}
 
-window.addEventListener('scroll', () => {
-    let current = null;
+/* ======================
+   FLOATING DATE (FIXED)
+====================== */
+if (chatContainer) {
+    chatContainer.addEventListener('scroll', () => {
+        let current = null;
 
-    dateSeparators.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= 60) {
-            current = el.dataset.date;
+        chatContainer.querySelectorAll('.date-separator').forEach(el => {
+            const r = el.getBoundingClientRect();
+            const p = chatContainer.getBoundingClientRect();
+
+            if (r.top - p.top <= 10) {
+                current = el.dataset.date;
+            }
+        });
+
+        if (current) {
+            currentShowingDate.textContent = current;
         }
     });
-
-    if (current) {
-        floatingDate.textContent = current;
-        floatingDate.classList.remove('hidden');
-    } else {
-        floatingDate.classList.add('hidden');
-    }
-});
+}

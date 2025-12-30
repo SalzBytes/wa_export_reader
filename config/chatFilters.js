@@ -12,7 +12,7 @@ export default [
             },
             badge: {
                 label: 'URGENT',
-                class: 'bg-red-500 text-white'
+                class: 'has-background-warning-light'
             }
         }
     },
@@ -53,7 +53,7 @@ export default [
             },
             badge: {
                 label: 'DELETED',
-                class: 'bg-red-500 text-white'
+                class: 'has-background-danger-light has-text-danger-dark'
             }
         }
     },

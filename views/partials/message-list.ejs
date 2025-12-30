@@ -1,8 +1,8 @@
-<% let lastDate=null; messages.forEach(m => { %>
-    <% if (m.date !==lastDate) { lastDate=m.date; %>
-    <div class="date-separator text-center text-xs text-gray-500 my-4" data-date="<%= m.date %>">
-      <%= m.date %>
-    </div>
-    <% } %>
-  <%- include('message', { m }) %>
+<% let lastDate=null; %>
+<% messages.forEach(m=> { %>
+<% if (m.date !==lastDate) { %>
+<%- include('date-separator', { date: m.date }) %>
+<% lastDate=m.date; %>
+<% } %>
+<%- include('message', { m }) %>
 <% }) %>
